@@ -7,145 +7,229 @@
 <title>🚀 Long Tail Stock Finder</title>
 <style>
   :root {
-    --bg: #07090f; --surface: #0f1523; --card: #131c2e; --border: #1e2d45;
-    --accent: #6366f1; --text: #e8edf5; --muted: #64748b; --subtle: #94a3b8;
+    --bg:#07090f; --surface:#0f1523; --card:#131c2e; --border:#1e2d45;
+    --accent:#6366f1; --text:#e8edf5; --muted:#64748b; --subtle:#94a3b8;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; min-height:100vh; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;}
 
-  .header {
+  /* ── Header ── */
+  .header{
     background:linear-gradient(135deg,#070c18 0%,#0e1130 50%,#120d2a 100%);
-    padding:28px 36px 22px; border-bottom:1px solid var(--border); position:relative; overflow:hidden;
+    padding:28px 36px 20px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;
   }
-  .header::before {
-    content:''; position:absolute; top:-60px; right:-80px; width:300px; height:300px;
-    background:radial-gradient(circle,rgba(99,102,241,.15) 0%,transparent 70%); pointer-events:none;
+  .header::before{
+    content:'';position:absolute;top:-60px;right:-80px;width:300px;height:300px;
+    background:radial-gradient(circle,rgba(99,102,241,.15) 0%,transparent 70%);pointer-events:none;
   }
-  .header h1 {
-    font-size:1.75rem; font-weight:800; letter-spacing:-.5px;
+  .header h1{
+    font-size:1.75rem;font-weight:800;letter-spacing:-.5px;
     background:linear-gradient(90deg,#a5b4fc,#c084fc,#38bdf8);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   }
-  .header p { color:var(--muted); font-size:.85rem; margin-top:5px; line-height:1.5; }
-  .disclaimer {
-    margin-top:12px; padding:9px 14px;
-    background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.25);
-    border-radius:8px; font-size:.75rem; color:#fbbf24; line-height:1.5;
+  .header-meta{display:flex;align-items:center;gap:16px;margin-top:6px;flex-wrap:wrap;}
+  .header p{color:var(--muted);font-size:.83rem;line-height:1.5;}
+  .update-badge{
+    background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.4);
+    color:#a5b4fc;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .disclaimer{
+    margin-top:12px;padding:9px 14px;
+    background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);
+    border-radius:8px;font-size:.75rem;color:#fbbf24;line-height:1.5;
   }
 
-  .controls {
-    background:var(--surface); border-bottom:1px solid var(--border);
-    padding:14px 36px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  /* ── Tabs ── */
+  .tab-bar{
+    background:var(--surface);border-bottom:1px solid var(--border);
+    padding:0 36px;display:flex;gap:0;
   }
-  .btn-update {
-    background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border:none;
-    padding:10px 22px; border-radius:9px; font-size:.9rem; font-weight:700; cursor:pointer;
-    transition:all .2s; display:flex; align-items:center; gap:7px;
+  .tab-btn{
+    background:transparent;border:none;border-bottom:3px solid transparent;
+    color:var(--muted);font-size:.88rem;font-weight:600;padding:14px 20px;
+    cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;
+  }
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{color:#a5b4fc;border-bottom-color:#6366f1;}
+  .tab-count{
+    background:rgba(99,102,241,.2);color:#818cf8;
+    font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:10px;
+  }
+  .tab-btn.active .tab-count{background:rgba(99,102,241,.4);color:#a5b4fc;}
+  .tab-new-count{
+    background:rgba(245,158,11,.2);color:#fbbf24;
+    font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:10px;
+  }
+
+  /* ── Controls ── */
+  .controls{
+    background:var(--surface);border-bottom:1px solid var(--border);
+    padding:12px 36px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  }
+  .btn-update{
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;
+    padding:9px 20px;border-radius:9px;font-size:.87rem;font-weight:700;cursor:pointer;
+    transition:all .2s;display:flex;align-items:center;gap:7px;
     box-shadow:0 2px 12px rgba(99,102,241,.3);
   }
-  .btn-update:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,.45); }
-  .btn-update:disabled { opacity:.55; cursor:not-allowed; transform:none; }
-  .sep { color:var(--border); font-size:1.2rem; }
-  .filter-row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
-  .filter-label { font-size:.75rem; color:var(--muted); white-space:nowrap; }
-  .pill {
-    background:transparent; color:var(--muted); border:1px solid var(--border);
-    padding:5px 14px; border-radius:20px; font-size:.78rem; cursor:pointer; transition:all .15s;
+  .btn-update:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(99,102,241,.45);}
+  .btn-update:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+  .sep{color:var(--border);font-size:1.2rem;}
+  .filter-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .filter-label{font-size:.73rem;color:var(--muted);white-space:nowrap;}
+  .pill{
+    background:transparent;color:var(--muted);border:1px solid var(--border);
+    padding:4px 13px;border-radius:20px;font-size:.76rem;cursor:pointer;transition:all .15s;
   }
-  .pill:hover { border-color:var(--accent); color:var(--text); }
-  .pill.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .pill:hover{border-color:var(--accent);color:var(--text);}
+  .pill.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-  .toolbar { padding:10px 36px 0; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  /* ── Toolbar ── */
+  .toolbar{padding:10px 36px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 
-  .status-bar {
-    padding:7px 36px; font-size:.75rem; color:var(--muted);
-    border-bottom:1px solid var(--border); background:var(--bg);
-  }
-
-  .stock-grid {
-    padding:24px 36px 40px;
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:16px;
+  /* ── Status ── */
+  .status-bar{
+    padding:6px 36px;font-size:.73rem;color:var(--muted);
+    border-bottom:1px solid var(--border);background:var(--bg);
   }
 
-  .stock-card {
-    background:var(--card); border:1px solid var(--border); border-radius:14px;
-    padding:20px; transition:all .2s; position:relative; overflow:hidden; cursor:default;
+  /* ── Summary ── */
+  .summary{
+    padding:12px 36px;background:var(--surface);border-bottom:1px solid var(--border);
+    display:flex;gap:24px;flex-wrap:wrap;
   }
-  .stock-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  .sum-item{display:flex;flex-direction:column;}
+  .sum-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+  .sum-val{font-size:1.05rem;font-weight:700;color:var(--text);margin-top:2px;}
+
+  /* ── Grid ── */
+  .stock-grid{
+    padding:22px 36px 40px;
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;
+  }
+
+  /* ── Card ── */
+  .stock-card{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:20px;transition:all .2s;position:relative;overflow:hidden;
+  }
+  .stock-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
     border-radius:14px 14px 0 0;
     background:linear-gradient(90deg,var(--theme-a),var(--theme-b));
   }
-  .stock-card:hover {
-    border-color:rgba(99,102,241,.5); transform:translateY(-2px);
+  .stock-card:hover{
+    border-color:rgba(99,102,241,.4);transform:translateY(-2px);
     box-shadow:0 10px 30px rgba(0,0,0,.4);
   }
-
-  .score-badge {
-    position:absolute; top:16px; right:16px; width:44px; height:44px;
-    border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-weight:800; font-size:.85rem;
+  .stock-card.archived-card{
+    opacity:.75;filter:saturate(.5);
   }
-  .s-a { background:rgba(16,185,129,.15); color:#10b981; border:2px solid #10b981; }
-  .s-b { background:rgba(245,158,11,.15); color:#f59e0b; border:2px solid #f59e0b; }
-  .s-c { background:rgba(99,102,241,.15); color:#818cf8; border:2px solid #818cf8; }
+  .stock-card.archived-card:hover{opacity:.9;filter:saturate(.7);}
 
-  .ticker { font-size:1.25rem; font-weight:800; color:#fff; letter-spacing:.5px; }
-  .co-name { font-size:.82rem; color:var(--muted); margin:2px 0 10px; }
-  .theme-tag {
-    display:inline-block; padding:3px 11px; border-radius:12px;
-    font-size:.72rem; font-weight:700; margin-bottom:13px;
+  /* Score badge */
+  .score-badge{
+    position:absolute;top:16px;right:16px;width:42px;height:42px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;
   }
-  .price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:3px; flex-wrap:wrap; }
-  .price { font-size:1.45rem; font-weight:800; color:#fff; }
-  .price-pending { font-size:.9rem; color:var(--muted); font-style:italic; }
-  .chg { font-size:.82rem; font-weight:700; padding:2px 9px; border-radius:6px; }
-  .chg-up { background:rgba(16,185,129,.12); color:#10b981; }
-  .chg-dn { background:rgba(239,68,68,.12); color:#ef4444; }
+  .s-a{background:rgba(16,185,129,.15);color:#10b981;border:2px solid #10b981;}
+  .s-b{background:rgba(245,158,11,.15);color:#f59e0b;border:2px solid #f59e0b;}
+  .s-c{background:rgba(99,102,241,.15);color:#818cf8;border:2px solid #818cf8;}
 
-  .metrics {
-    display:grid; grid-template-columns:1fr 1fr; gap:9px;
-    margin-top:13px; padding-top:13px; border-top:1px solid var(--border);
+  /* NEW badge */
+  .new-badge{
+    position:absolute;top:14px;left:14px;
+    background:linear-gradient(135deg,#f59e0b,#ef4444);
+    color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.5px;
+    padding:2px 8px;border-radius:6px;text-transform:uppercase;
+    animation:pulse-new 2s infinite;box-shadow:0 2px 8px rgba(245,158,11,.4);
   }
-  .metric .ml { font-size:.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
-  .metric .mv { font-size:.88rem; font-weight:700; color:var(--text); margin-top:1px; }
-
-  .bar-wrap { margin-top:12px; }
-  .bar-top { display:flex; justify-content:space-between; font-size:.72rem; color:var(--muted); margin-bottom:4px; }
-  .bar-track { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
-  .bar-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#6366f1,#10b981); transition:width .6s ease; }
-
-  .stock-desc { font-size:.78rem; color:var(--subtle); margin-top:11px; line-height:1.55; }
-
-  .spinner {
-    display:inline-block; width:13px; height:13px;
-    border:2px solid rgba(255,255,255,.3); border-top-color:#fff;
-    border-radius:50%; animation:spin .6s linear infinite;
+  @keyframes pulse-new{
+    0%,100%{box-shadow:0 2px 8px rgba(245,158,11,.4);}
+    50%{box-shadow:0 2px 16px rgba(245,158,11,.8);}
   }
-  @keyframes spin { to { transform:rotate(360deg); } }
 
-  .empty { text-align:center; padding:60px; color:var(--muted); }
-  .empty span { font-size:3rem; display:block; margin-bottom:12px; }
-
-  .summary {
-    padding:14px 36px; background:var(--surface); border-bottom:1px solid var(--border);
-    display:flex; gap:24px; flex-wrap:wrap;
+  /* Archived reason */
+  .archived-reason{
+    margin-top:10px;padding:8px 10px;
+    background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);
+    border-radius:8px;font-size:.74rem;color:#fca5a5;line-height:1.4;
   }
-  .sum-item { display:flex; flex-direction:column; }
-  .sum-label { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
-  .sum-val { font-size:1.1rem; font-weight:700; color:var(--text); margin-top:2px; }
+  .archived-reason::before{content:'📦 เหตุผล: ';font-weight:700;color:#f87171;}
+
+  .archived-date{
+    font-size:.68rem;color:var(--muted);margin-top:5px;
+  }
+
+  .ticker{font-size:1.2rem;font-weight:800;color:#fff;letter-spacing:.5px;}
+  .co-name{font-size:.8rem;color:var(--muted);margin:2px 0 10px;}
+  .theme-tag{
+    display:inline-block;padding:3px 11px;border-radius:12px;
+    font-size:.7rem;font-weight:700;margin-bottom:12px;
+  }
+  .price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;flex-wrap:wrap;}
+  .price{font-size:1.4rem;font-weight:800;color:#fff;}
+  .price-pending{font-size:.88rem;color:var(--muted);font-style:italic;}
+  .chg{font-size:.8rem;font-weight:700;padding:2px 8px;border-radius:6px;}
+  .chg-up{background:rgba(16,185,129,.12);color:#10b981;}
+  .chg-dn{background:rgba(239,68,68,.12);color:#ef4444;}
+
+  .metrics{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+    margin-top:12px;padding-top:12px;border-top:1px solid var(--border);
+  }
+  .metric .ml{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+  .metric .mv{font-size:.86rem;font-weight:700;color:var(--text);margin-top:1px;}
+
+  .bar-wrap{margin-top:11px;}
+  .bar-top{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:4px;}
+  .bar-track{height:4px;background:var(--border);border-radius:3px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#6366f1,#10b981);transition:width .6s ease;}
+
+  .stock-desc{font-size:.76rem;color:var(--subtle);margin-top:10px;line-height:1.55;}
+
+  .spinner{
+    display:inline-block;width:12px;height:12px;
+    border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+    border-radius:50%;animation:spin .6s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .empty{text-align:center;padding:60px;color:var(--muted);}
+  .empty span{font-size:3rem;display:block;margin-bottom:12px;}
+
+  /* hide/show tabs */
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
 </style>
 </head>
 <body>
 
+<!-- ══ HEADER ══ -->
 <div class="header">
   <h1>🚀 Long Tail Stock Finder</h1>
-  <p>ระบบคัดกรองหุ้น <strong style="color:#a5b4fc">Long Tail</strong> ที่มีศักยภาพเติบโต <strong style="color:#c084fc">หลายเท่าตัว</strong> ในอนาคต</p>
+  <div class="header-meta">
+    <p>ระบบคัดกรองหุ้น <strong style="color:#a5b4fc">Long Tail</strong> ที่มีศักยภาพเติบโต <strong style="color:#c084fc">หลายเท่าตัว</strong></p>
+    <span class="update-badge">🗓 อัพเดท เมษายน 2026</span>
+  </div>
   <div class="disclaimer">
     ⚠️ <strong>คำเตือน:</strong> ข้อมูลนี้ไม่ใช่คำแนะนำการลงทุน • หุ้น Long Tail มีความเสี่ยงสูงมาก อาจเสียหายทั้งหมด • ศึกษาข้อมูลเพิ่มเติมก่อนตัดสินใจเสมอ
   </div>
 </div>
 
+<!-- ══ TABS ══ -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-active" onclick="setTab('active')">
+    🔥 Active
+    <span class="tab-count" id="cnt-active">—</span>
+    <span class="tab-new-count" id="cnt-new" style="display:none"></span>
+  </button>
+  <button class="tab-btn" id="tab-archived" onclick="setTab('archived')">
+    📦 Archived
+    <span class="tab-count" id="cnt-archived">—</span>
+  </button>
+</div>
+
+<!-- ══ CONTROLS ══ -->
 <div class="controls">
   <button class="btn-update" id="updateBtn" onclick="updateAll()">
     <span id="btnIcon">⚡</span>
@@ -160,10 +244,12 @@
     <button class="pill" onclick="setFilter('quantum',this)">⚛️ Quantum</button>
     <button class="pill" onclick="setFilter('biotech',this)">🧬 Biotech</button>
     <button class="pill" onclick="setFilter('energy',this)">⚡ Energy</button>
+    <button class="pill" onclick="setFilter('evtol',this)">🛩 eVTOL</button>
     <button class="pill" onclick="setFilter('fintech',this)">💳 Fintech</button>
   </div>
 </div>
 
+<!-- ══ TOOLBAR ══ -->
 <div class="toolbar">
   <span class="filter-label">เรียงตาม:</span>
   <button class="pill active" onclick="setSort('score',this)">🏆 Potential Score</button>
@@ -179,63 +265,139 @@
   <div class="sum-item"><span class="sum-label">ขึ้นวันนี้</span><span class="sum-val" style="color:#10b981" id="sumUp">—</span></div>
   <div class="sum-item"><span class="sum-label">ลงวันนี้</span><span class="sum-val" style="color:#ef4444" id="sumDn">—</span></div>
   <div class="sum-item"><span class="sum-label">Score เฉลี่ย</span><span class="sum-val" style="color:#818cf8" id="sumAvgScore">—</span></div>
-  <div class="sum-item"><span class="sum-label">อัพเดทล่าสุด</span><span class="sum-val" style="font-size:.8rem" id="sumTime">—</span></div>
+  <div class="sum-item"><span class="sum-label">อัพเดทล่าสุด</span><span class="sum-val" style="font-size:.78rem" id="sumTime">—</span></div>
 </div>
 
-<div class="stock-grid" id="stockGrid"></div>
+<!-- ══ ACTIVE TAB ══ -->
+<div class="tab-panel active" id="panel-active">
+  <div class="stock-grid" id="gridActive"></div>
+</div>
+
+<!-- ══ ARCHIVED TAB ══ -->
+<div class="tab-panel" id="panel-archived">
+  <div class="stock-grid" id="gridArchived"></div>
+</div>
 
 <script>
-const STOCKS = [
-  { t:'ASTS',  n:'AST SpaceMobile',            sec:'space',   theme:'🛸 Space',       ta:'#8b5cf6', tb:'#c084fc', score:95, mult:'5–20x',  risk:'Very High', upside:85, why:'สร้าง satellite ที่ต่อตรงกับมือถือทุกเครื่องในโลก ตลาดใหญ่ 5 พันล้านคน ไม่ต้องการ SIM พิเศษ' },
-  { t:'RKLB',  n:'Rocket Lab USA',              sec:'space',   theme:'🛸 Space',       ta:'#7c3aed', tb:'#a78bfa', score:88, mult:'5–15x',  risk:'High',      upside:70, why:'ผู้ให้บริการส่งดาวเทียมเล็ก + พัฒนา Neutron Rocket สำหรับ medium-lift ปีกธุรกิจหลากหลาย' },
-  { t:'LUNR',  n:'Intuitive Machines',          sec:'space',   theme:'🛸 Lunar',       ta:'#6d28d9', tb:'#8b5cf6', score:78, mult:'3–12x',  risk:'Very High', upside:70, why:'ผู้รับเหมา NASA ภารกิจดวงจันทร์ เศรษฐกิจ Lunar Economy กำลังเริ่มต้น backlog แข็งแกร่ง' },
-  { t:'SOUN',  n:'SoundHound AI',               sec:'ai',      theme:'🤖 AI Voice',    ta:'#0284c7', tb:'#38bdf8', score:83, mult:'3–12x',  risk:'High',      upside:65, why:'Voice AI สำหรับยานยนต์ ร้านอาหาร IoT อยู่ใน Nvidia ecosystem ใช้งานจริงในรถ Honda/Hyundai' },
-  { t:'BBAI',  n:'BigBear.ai',                  sec:'ai',      theme:'🤖 AI Defense',  ta:'#0369a1', tb:'#0ea5e9', score:72, mult:'2–8x',   risk:'High',      upside:55, why:'AI analytics สำหรับ defense & intelligence ลูกค้าหลักคือ US Government สัญญาระยะยาว' },
-  { t:'RXRX',  n:'Recursion Pharmaceuticals',   sec:'ai',      theme:'🤖 AI+Biotech',  ta:'#0e7490', tb:'#22d3ee', score:86, mult:'5–15x',  risk:'High',      upside:80, why:'ใช้ AI ค้นพบยาได้เร็วกว่าเดิม 100x partnership กับ Nvidia มี drug pipeline หลายสิบตัว' },
-  { t:'GFAI',  n:'Guardforce AI',               sec:'ai',      theme:'🤖 AI Robot',    ta:'#155e75', tb:'#06b6d4', score:65, mult:'3–10x',  risk:'Very High', upside:75, why:'หุ่นยนต์รักษาความปลอดภัย AI ตลาด Asia-Pacific ขยายตัวเร็ว market cap เล็กมาก' },
-  { t:'IONQ',  n:'IonQ',                        sec:'quantum', theme:'⚛️ Quantum',     ta:'#7c3aed', tb:'#d946ef', score:91, mult:'10–30x', risk:'Very High', upside:90, why:'Quantum computer ที่มีรายได้จริง ขายผ่าน AWS / Azure / GCP แม่นยำสูงสุดในอุตสาหกรรม' },
-  { t:'RGTI',  n:'Rigetti Computing',           sec:'quantum', theme:'⚛️ Quantum',     ta:'#6b21a8', tb:'#c026d3', score:75, mult:'5–20x',  risk:'Very High', upside:88, why:'Full-stack quantum cloud ราคาถูกกว่า IonQ ได้ contract ใหม่กับ US Air Force' },
-  { t:'QUBT',  n:'Quantum Computing Inc.',      sec:'quantum', theme:'⚛️ Quantum',     ta:'#701a75', tb:'#a21caf', score:68, mult:'5–15x',  risk:'Very High', upside:82, why:'Photonic quantum optimization software ราคาต่ำ ใช้งานได้บน hardware ปัจจุบัน' },
-  { t:'VERV',  n:'Verve Therapeutics',          sec:'biotech', theme:'🧬 Gene Edit',   ta:'#047857', tb:'#10b981', score:80, mult:'5–20x',  risk:'Very High', upside:75, why:'Gene editing ลด LDL cholesterol ถาวรในครั้งเดียว รักษาโรคหัวใจ data ระยะ 1 น่าสนใจมาก' },
-  { t:'BEAM',  n:'Beam Therapeutics',           sec:'biotech', theme:'🧬 Base Edit',   ta:'#065f46', tb:'#34d399', score:78, mult:'4–12x',  risk:'Very High', upside:68, why:'Base editing แม่นยำกว่า CRISPR 10x ผลทดลองในมนุษย์โรค sickle cell น่าประทับใจ' },
-  { t:'PACB',  n:'Pacific Biosciences',         sec:'biotech', theme:'🧬 Genomics',    ta:'#064e3b', tb:'#059669', score:73, mult:'3–10x',  risk:'High',      upside:60, why:'Long-read DNA sequencing เหนือกว่า Illumina ในงาน complex genome ตลาดเติบโต' },
-  { t:'FLUX',  n:'Flux Power Holdings',         sec:'energy',  theme:'⚡ Battery',     ta:'#92400e', tb:'#f59e0b', score:74, mult:'3–8x',   risk:'Mid',       upside:55, why:'Battery pack สำหรับ forklift ใน warehouse เติบโตตาม e-commerce รายได้ recurring' },
-  { t:'SHLS',  n:'Shoals Technologies',         sec:'energy',  theme:'⚡ Solar',       ta:'#78350f', tb:'#fbbf24', score:76, mult:'3–8x',   risk:'Mid',       upside:58, why:'Electrical BOS สำหรับ utility-scale solar farms backlog ยาว gross margin สูง' },
-  { t:'ARRY',  n:'Array Technologies',          sec:'energy',  theme:'⚡ Solar Track', ta:'#713f12', tb:'#f97316', score:74, mult:'2–6x',   risk:'Mid',       upside:50, why:'Solar tracker ชั้นนำ เพิ่ม output 25% backlog แข็งแกร่งตาม IRA subsidy' },
-  { t:'UPST',  n:'Upstart Holdings',            sec:'fintech', theme:'💳 AI Lending',  ta:'#9a3412', tb:'#fb923c', score:79, mult:'3–10x',  risk:'High',      upside:65, why:'AI lending ใช้ 1,600+ variables แทน credit score เดิม default rate ต่ำกว่า 75%' },
-  { t:'AFRM',  n:'Affirm Holdings',             sec:'fintech', theme:'💳 BNPL',        ta:'#7f1d1d', tb:'#f87171', score:77, mult:'3–8x',   risk:'High',      upside:58, why:'BNPL ชั้นนำ partner กับ Amazon, Shopify ขยาย debit card และ 0% APR deals ใหม่' },
-  { t:'SOFI',  n:'SoFi Technologies',           sec:'fintech', theme:'💳 Neobank',     ta:'#450a0a', tb:'#fca5a5', score:76, mult:'3–8x',   risk:'Mid',       upside:55, why:'Digital bank ที่มี banking license พร้อม cross-sell lending + investing + checking ในแอปเดียว' },
+/* ═══════════════════════════════════════════════
+   ACTIVE STOCKS  —  อัพเดท เมษายน 2026
+   isNew = true  → ใส่เพิ่มเดือนนี้
+═══════════════════════════════════════════════ */
+const ACTIVE = [
+  /* 🛸 Space */
+  { t:'ASTS',  n:'AST SpaceMobile',          sec:'space',   theme:'🛸 Space',       ta:'#8b5cf6',tb:'#c084fc', score:95,mult:'5–20x', risk:'Very High',upside:85, isNew:false,
+    why:'สร้าง satellite ต่อตรงมือถือทุกเครื่องในโลก 5 พันล้านคน ไม่ต้อง SIM พิเศษ เพิ่งเปิดตัวบริการเชิงพาณิชย์' },
+  { t:'RKLB',  n:'Rocket Lab USA',            sec:'space',   theme:'🛸 Space',       ta:'#7c3aed',tb:'#a78bfa', score:88,mult:'5–15x', risk:'High',     upside:70, isNew:false,
+    why:'ส่งดาวเทียมเล็ก + พัฒนา Neutron Rocket medium-lift backlog เพิ่มขึ้นต่อเนื่อง' },
+  { t:'LUNR',  n:'Intuitive Machines',        sec:'space',   theme:'🛸 Lunar',       ta:'#6d28d9',tb:'#8b5cf6', score:78,mult:'3–12x', risk:'Very High',upside:70, isNew:false,
+    why:'ผู้รับเหมา NASA ภารกิจดวงจันทร์ lunar economy เริ่มต้น contract ใหม่กับ SpaceX' },
+
+  /* 🤖 AI */
+  { t:'SOUN',  n:'SoundHound AI',             sec:'ai',      theme:'🤖 AI Voice',    ta:'#0284c7',tb:'#38bdf8', score:83,mult:'3–12x', risk:'High',     upside:65, isNew:false,
+    why:'Voice AI ยานยนต์ + ร้านอาหาร อยู่ใน Nvidia ecosystem รถ Honda/Hyundai ใช้อยู่' },
+  { t:'RXRX',  n:'Recursion Pharmaceuticals', sec:'ai',      theme:'🤖 AI+Biotech',  ta:'#0e7490',tb:'#22d3ee', score:86,mult:'5–15x', risk:'High',     upside:80, isNew:false,
+    why:'AI ค้นพบยาเร็วกว่าเดิม 100x partnership Nvidia pipeline ยา 40+ ตัว' },
+  { t:'SERV',  n:'Serve Robotics',            sec:'ai',      theme:'🤖 AI Robot',    ta:'#0369a1',tb:'#7dd3fc', score:80,mult:'5–15x', risk:'Very High',upside:78, isNew:true,
+    why:'หุ่นยนต์ส่งอาหารอัตโนมัติใน LA Nvidia + Uber Eats ลงทุน ขยาย fleet 2,000 คัน ปี 2026' },
+
+  /* ⚛️ Quantum */
+  { t:'IONQ',  n:'IonQ',                      sec:'quantum', theme:'⚛️ Quantum',     ta:'#7c3aed',tb:'#d946ef', score:91,mult:'10–30x',risk:'Very High',upside:90, isNew:false,
+    why:'Quantum computer รายได้จริง AWS / Azure / GCP แม่นยำสูงสุด contract ทหารใหม่' },
+  { t:'RGTI',  n:'Rigetti Computing',         sec:'quantum', theme:'⚛️ Quantum',     ta:'#6b21a8',tb:'#c026d3', score:75,mult:'5–20x', risk:'Very High',upside:88, isNew:false,
+    why:'Full-stack quantum cloud ราคาถูก contract US Air Force เพิ่มขึ้น' },
+  { t:'QUBT',  n:'Quantum Computing Inc.',    sec:'quantum', theme:'⚛️ Quantum',     ta:'#701a75',tb:'#a21caf', score:68,mult:'5–15x', risk:'Very High',upside:82, isNew:false,
+    why:'Photonic quantum optimization ราคาต่ำ ใช้บน hardware ปัจจุบันได้เลย' },
+
+  /* 🧬 Biotech */
+  { t:'VERV',  n:'Verve Therapeutics',        sec:'biotech', theme:'🧬 Gene Edit',   ta:'#047857',tb:'#10b981', score:80,mult:'5–20x', risk:'Very High',upside:75, isNew:false,
+    why:'Gene editing ลด LDL ถาวรครั้งเดียว รักษาโรคหัวใจ phase 1 data น่าสนใจมาก' },
+  { t:'BEAM',  n:'Beam Therapeutics',         sec:'biotech', theme:'🧬 Base Edit',   ta:'#065f46',tb:'#34d399', score:78,mult:'4–12x', risk:'Very High',upside:68, isNew:false,
+    why:'Base editing แม่นยำกว่า CRISPR 10x ผลทดลอง sickle cell น่าประทับใจ' },
+
+  /* ⚡ Clean Energy */
+  { t:'OKLO',  n:'Oklo Inc.',                 sec:'energy',  theme:'⚡ Nuclear',     ta:'#b45309',tb:'#fbbf24', score:87,mult:'5–20x', risk:'Very High',upside:82, isNew:true,
+    why:'Microreactor นิวเคลียร์ขนาดเล็ก Sam Altman อยู่ใน board contract กับ data centers AI ล่าสุด' },
+  { t:'SHLS',  n:'Shoals Technologies',       sec:'energy',  theme:'⚡ Solar',       ta:'#78350f',tb:'#fbbf24', score:76,mult:'3–8x',  risk:'Mid',      upside:58, isNew:false,
+    why:'Electrical BOS utility-scale solar backlog ยาว gross margin สูง IRA tailwind' },
+
+  /* 🛩 eVTOL */
+  { t:'JOBY',  n:'Joby Aviation',             sec:'evtol',   theme:'🛩 eVTOL',       ta:'#1d4ed8',tb:'#60a5fa', score:84,mult:'5–20x', risk:'Very High',upside:80, isNew:true,
+    why:'Air taxi ไฟฟ้า Toyota ลงทุน 894M$ FAA certification ใกล้แล้ว เปิดบริการ Dubai 2026' },
+  { t:'ACHR',  n:'Archer Aviation',           sec:'evtol',   theme:'🛩 eVTOL',       ta:'#1e40af',tb:'#93c5fd', score:79,mult:'4–15x', risk:'Very High',upside:75, isNew:true,
+    why:'eVTOL air taxi United Airlines deal + Stellantis ผลิต FAA type certificate รอแค่ approval' },
+
+  /* 💳 Fintech */
+  { t:'UPST',  n:'Upstart Holdings',          sec:'fintech', theme:'💳 AI Lending',  ta:'#9a3412',tb:'#fb923c', score:79,mult:'3–10x', risk:'High',     upside:65, isNew:false,
+    why:'AI lending 1,600+ variables แทน credit score อัตราดอกเบี้ยลดช่วย loan volume ฟื้น' },
+  { t:'AFRM',  n:'Affirm Holdings',           sec:'fintech', theme:'💳 BNPL',        ta:'#7f1d1d',tb:'#f87171', score:77,mult:'3–8x',  risk:'High',     upside:58, isNew:false,
+    why:'BNPL ชั้นนำ Amazon + Shopify ขยาย debit card 0% APR deal ใหม่ GMV เติบโต 35% YoY' },
+  { t:'SOFI',  n:'SoFi Technologies',         sec:'fintech', theme:'💳 Neobank',     ta:'#450a0a',tb:'#fca5a5', score:76,mult:'3–8x',  risk:'Mid',      upside:55, isNew:false,
+    why:'Digital bank มี banking license cross-sell lending + investing + checking ในแอปเดียว' },
 ];
 
-let liveData={}, activeFilter='all', activeSort='score';
+/* ═══════════════════════════════════════════════
+   ARCHIVED STOCKS  —  นำออกจาก watchlist
+═══════════════════════════════════════════════ */
+const ARCHIVED = [
+  { t:'GFAI', n:'Guardforce AI',       sec:'ai',     theme:'🤖 AI Robot',    ta:'#374151',tb:'#6b7280',
+    score:40, archivedDate:'มีนาคม 2026',
+    archivedReason:'Market cap เล็กเกิน liquidity ต่ำ revenue หดตัว 3 ไตรมาสติด ยากจะ scale' },
+  { t:'BBAI', n:'BigBear.ai',          sec:'ai',     theme:'🤖 AI Defense',  ta:'#374151',tb:'#6b7280',
+    score:35, archivedDate:'มีนาคม 2026',
+    archivedReason:'Contract ไม่ต่ออายุหลายรายการ ขาดทุนเพิ่มขึ้น competition จาก Palantir สูง' },
+  { t:'FLUX', n:'Flux Power Holdings', sec:'energy', theme:'⚡ Battery',     ta:'#374151',tb:'#6b7280',
+    score:38, archivedDate:'กุมภาพันธ์ 2026',
+    archivedReason:'Growth ชะลอตัว competition จาก Chinese battery สูง margin กดดัน' },
+  { t:'ARRY', n:'Array Technologies',  sec:'energy', theme:'⚡ Solar Track',  ta:'#374151',tb:'#6b7280',
+    score:42, archivedDate:'กุมภาพันธ์ 2026',
+    archivedReason:'Mature company แล้ว margin compression ASP ลดลง ไม่ใช่ high-growth story อีกต่อไป' },
+  { t:'PACB', n:'Pacific Biosciences', sec:'biotech',theme:'🧬 Genomics',    ta:'#374151',tb:'#6b7280',
+    score:33, archivedDate:'มกราคม 2026',
+    archivedReason:'Cash burn สูงมาก revenue growth หยุด Illumina ฟื้นตัวแข่งกลับ การเงินตึงตัว' },
+];
 
-function scoreClass(s){ return s>=85?'s-a':s>=75?'s-b':'s-c'; }
+/* ════════════════════════ */
+let liveData={}, activeFilter='all', activeSort='score', currentTab='active';
+
+function scoreClass(s){return s>=85?'s-a':s>=75?'s-b':'s-c';}
 function fmtCap(v){
-  if(!v) return 'N/A';
-  if(v>=1e12) return '$'+(v/1e12).toFixed(1)+'T';
-  if(v>=1e9)  return '$'+(v/1e9).toFixed(1)+'B';
+  if(!v)return 'N/A';
+  if(v>=1e12)return '$'+(v/1e12).toFixed(1)+'T';
+  if(v>=1e9) return '$'+(v/1e9).toFixed(1)+'B';
   return '$'+(v/1e6).toFixed(0)+'M';
 }
 
-function render(){
-  const grid=document.getElementById('stockGrid');
-  let list=STOCKS.filter(s=>activeFilter==='all'||s.sec===activeFilter);
+function updateCounts(){
+  const newCount = ACTIVE.filter(s=>s.isNew).length;
+  document.getElementById('cnt-active').textContent   = ACTIVE.length;
+  document.getElementById('cnt-archived').textContent = ARCHIVED.length;
+  const nb = document.getElementById('cnt-new');
+  if(newCount>0){ nb.textContent=`+${newCount} NEW`; nb.style.display='inline'; }
+}
+
+function renderActive(){
+  const grid = document.getElementById('gridActive');
+  let list = ACTIVE.filter(s=>activeFilter==='all'||s.sec===activeFilter);
   if(activeSort==='score')  list.sort((a,b)=>b.score-a.score);
   if(activeSort==='upside') list.sort((a,b)=>b.upside-a.upside);
   if(activeSort==='change') list.sort((a,b)=>(liveData[b.t]?.regularMarketChangePercent||0)-(liveData[a.t]?.regularMarketChangePercent||0));
   if(activeSort==='mcap')   list.sort((a,b)=>(liveData[b.t]?.marketCap||0)-(liveData[a.t]?.marketCap||0));
-  if(!list.length){ grid.innerHTML='<div class="empty"><span>🔭</span>ไม่มีหุ้นในหมวดนี้</div>'; return; }
+
+  if(!list.length){grid.innerHTML='<div class="empty"><span>🔭</span>ไม่มีหุ้นในหมวดนี้</div>';return;}
 
   grid.innerHTML=list.map(s=>{
     const d=liveData[s.t]||{};
     const px=d.regularMarketPrice, chg=d.regularMarketChange, pct=d.regularMarketChangePercent;
     const priceHtml=px?`<span class="price">$${px.toFixed(2)}</span>`:`<span class="price-pending">— กดอัพเดท —</span>`;
     let chgHtml='';
-    if(chg!=null){ const c=chg>=0?'chg-up':'chg-dn',sg=chg>=0?'+':''; chgHtml=`<span class="chg ${c}">${sg}${chg.toFixed(2)} (${sg}${pct.toFixed(2)}%)</span>`; }
+    if(chg!=null){const c=chg>=0?'chg-up':'chg-dn',sg=chg>=0?'+':'';chgHtml=`<span class="chg ${c}">${sg}${chg.toFixed(2)} (${sg}${pct.toFixed(2)}%)</span>`;}
     return `
     <div class="stock-card" style="--theme-a:${s.ta};--theme-b:${s.tb}">
-      <div class="score-badge ${scoreClass(s.score)}">${s.score}</div>
-      <div class="ticker">${s.t}</div>
+      ${s.isNew?'<div class="new-badge">✨ NEW</div>':''}
+      <div class="score-badge ${scoreClass(s.score)}" style="${s.isNew?'top:14px;right:14px':''}">
+        ${s.score}
+      </div>
+      <div class="ticker" style="${s.isNew?'margin-top:28px':''}">${s.t}</div>
       <div class="co-name">${s.n}</div>
       <span class="theme-tag" style="background:${s.ta}22;color:${s.tb};border:1px solid ${s.ta}55">${s.theme}</span>
       <div class="price-row">${priceHtml}${chgHtml}</div>
@@ -253,6 +415,7 @@ function render(){
     </div>`;
   }).join('');
 
+  // summary
   if(Object.keys(liveData).length>0){
     const ups=list.filter(s=>(liveData[s.t]?.regularMarketChangePercent||0)>0).length;
     const dns=list.filter(s=>(liveData[s.t]?.regularMarketChangePercent||0)<0).length;
@@ -264,27 +427,51 @@ function render(){
   }
 }
 
+function renderArchived(){
+  const grid=document.getElementById('gridArchived');
+  let list=ARCHIVED.filter(s=>activeFilter==='all'||s.sec===activeFilter);
+  list.sort((a,b)=>b.score-a.score);
+
+  if(!list.length){grid.innerHTML='<div class="empty"><span>📦</span>ไม่มีหุ้นใน Archived หมวดนี้</div>';return;}
+
+  grid.innerHTML=list.map(s=>`
+    <div class="stock-card archived-card" style="--theme-a:${s.ta};--theme-b:${s.tb}">
+      <div class="score-badge ${scoreClass(s.score)}">${s.score}</div>
+      <div class="ticker">${s.t}</div>
+      <div class="co-name">${s.n}</div>
+      <span class="theme-tag" style="background:${s.ta}22;color:${s.tb};border:1px solid ${s.ta}55">${s.theme}</span>
+      <div class="archived-reason">${s.archivedReason}</div>
+      <div class="archived-date">นำออกเมื่อ: ${s.archivedDate}</div>
+    </div>`
+  ).join('');
+}
+
+function render(){
+  if(currentTab==='active') renderActive();
+  else renderArchived();
+}
+
+/* ── Fetch ── */
 async function updateAll(){
   const btn=document.getElementById('updateBtn');
   const bar=document.getElementById('statusBar');
   btn.disabled=true;
   document.getElementById('btnIcon').innerHTML='<span class="spinner"></span>';
   document.getElementById('btnText').textContent='กำลังโหลด...';
-  bar.textContent='⏳ กำลังดึงข้อมูล...'; bar.style.color='var(--muted)';
+  bar.textContent='⏳ กำลังดึงข้อมูล...';bar.style.color='var(--muted)';
 
-  const syms=STOCKS.map(s=>s.t).join(',');
-  try {
-    // เรียก Vercel serverless function ที่ /api/quotes
+  // ดึงเฉพาะ active stocks
+  const syms=ACTIVE.map(s=>s.t).join(',');
+  try{
     const r=await fetch(`/api/quotes?symbols=${encodeURIComponent(syms)}`,{signal:AbortSignal.timeout(15000)});
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const j=await r.json();
-    const result=j?.quoteResponse?.result||[];
-    result.forEach(q=>{ if(q.symbol) liveData[q.symbol]=q; });
+    (j?.quoteResponse?.result||[]).forEach(q=>{if(q.symbol)liveData[q.symbol]=q;});
     const now=new Date().toLocaleString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     bar.textContent=`✅ อัพเดทแล้ว เวลา ${now} • ข้อมูลจาก Yahoo Finance (delay ~15 นาที)`;
     bar.style.color='#10b981';
     document.getElementById('sumTime').textContent=now;
-  } catch(e){
+  }catch(e){
     bar.textContent=`⚠️ ดึงข้อมูลไม่สำเร็จ: ${e.message}`;
     bar.style.color='#f59e0b';
   }
@@ -294,17 +481,30 @@ async function updateAll(){
   document.getElementById('btnText').textContent='อัพเดทราคา Live';
 }
 
+/* ── Navigation ── */
+function setTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  document.getElementById(`panel-${tab}`).classList.add('active');
+  // summary bar แสดงเฉพาะ active tab
+  document.getElementById('summaryBar').style.display = (tab==='active'&&Object.keys(liveData).length>0)?'flex':'none';
+  render();
+}
 function setFilter(sec,el){
   activeFilter=sec;
   document.querySelectorAll('.controls .pill').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active'); render();
+  el.classList.add('active');render();
 }
 function setSort(s,el){
   activeSort=s;
   document.querySelectorAll('.toolbar .pill').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active'); render();
+  el.classList.add('active');render();
 }
 
+/* ── Init ── */
+updateCounts();
 render();
 </script>
 </body>
