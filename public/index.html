@@ -6,9 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🚀 Long Tail Stock Finder</title>
 <style>
-  :root {
-    --bg:#07090f; --surface:#0f1523; --card:#131c2e; --border:#1e2d45;
-    --accent:#6366f1; --text:#e8edf5; --muted:#64748b; --subtle:#94a3b8;
+  :root{
+    --bg:#07090f;--surface:#0f1523;--card:#131c2e;--border:#1e2d45;
+    --accent:#6366f1;--text:#e8edf5;--muted:#64748b;--subtle:#94a3b8;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;}
@@ -16,190 +16,184 @@
   /* ── Header ── */
   .header{
     background:linear-gradient(135deg,#070c18 0%,#0e1130 50%,#120d2a 100%);
-    padding:28px 36px 20px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;
+    padding:24px 36px 18px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;
   }
-  .header::before{
-    content:'';position:absolute;top:-60px;right:-80px;width:300px;height:300px;
-    background:radial-gradient(circle,rgba(99,102,241,.15) 0%,transparent 70%);pointer-events:none;
-  }
-  .header h1{
-    font-size:1.75rem;font-weight:800;letter-spacing:-.5px;
+  .header::before{content:'';position:absolute;top:-60px;right:-80px;width:300px;height:300px;
+    background:radial-gradient(circle,rgba(99,102,241,.15) 0%,transparent 70%);pointer-events:none;}
+  .header h1{font-size:1.7rem;font-weight:800;letter-spacing:-.5px;
     background:linear-gradient(90deg,#a5b4fc,#c084fc,#38bdf8);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  }
-  .header-meta{display:flex;align-items:center;gap:16px;margin-top:6px;flex-wrap:wrap;}
-  .header p{color:var(--muted);font-size:.83rem;line-height:1.5;}
-  .update-badge{
-    background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.4);
-    color:#a5b4fc;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;
-  }
-  .disclaimer{
-    margin-top:12px;padding:9px 14px;
-    background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);
-    border-radius:8px;font-size:.75rem;color:#fbbf24;line-height:1.5;
-  }
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .header-meta{display:flex;align-items:center;gap:12px;margin-top:5px;flex-wrap:wrap;}
+  .header p{color:var(--muted);font-size:.82rem;line-height:1.5;}
+  .update-badge{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.4);
+    color:#a5b4fc;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+  .disclaimer{margin-top:10px;padding:8px 14px;background:rgba(245,158,11,.08);
+    border:1px solid rgba(245,158,11,.25);border-radius:8px;font-size:.73rem;color:#fbbf24;line-height:1.5;}
 
   /* ── Tabs ── */
-  .tab-bar{
-    background:var(--surface);border-bottom:1px solid var(--border);
-    padding:0 36px;display:flex;gap:0;
-  }
-  .tab-btn{
-    background:transparent;border:none;border-bottom:3px solid transparent;
-    color:var(--muted);font-size:.88rem;font-weight:600;padding:14px 20px;
-    cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;
-  }
+  .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 36px;display:flex;}
+  .tab-btn{background:transparent;border:none;border-bottom:3px solid transparent;
+    color:var(--muted);font-size:.86rem;font-weight:600;padding:13px 18px;
+    cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
   .tab-btn:hover{color:var(--text);}
   .tab-btn.active{color:#a5b4fc;border-bottom-color:#6366f1;}
-  .tab-count{
-    background:rgba(99,102,241,.2);color:#818cf8;
-    font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:10px;
-  }
+  .tab-count{background:rgba(99,102,241,.2);color:#818cf8;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:10px;}
   .tab-btn.active .tab-count{background:rgba(99,102,241,.4);color:#a5b4fc;}
-  .tab-new-count{
-    background:rgba(245,158,11,.2);color:#fbbf24;
-    font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:10px;
-  }
+  .tab-new-count{background:rgba(245,158,11,.25);color:#fbbf24;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:10px;}
 
   /* ── Controls ── */
-  .controls{
-    background:var(--surface);border-bottom:1px solid var(--border);
-    padding:12px 36px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-  }
-  .btn-update{
-    background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;
-    padding:9px 20px;border-radius:9px;font-size:.87rem;font-weight:700;cursor:pointer;
-    transition:all .2s;display:flex;align-items:center;gap:7px;
-    box-shadow:0 2px 12px rgba(99,102,241,.3);
-  }
-  .btn-update:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(99,102,241,.45);}
-  .btn-update:disabled{opacity:.55;cursor:not-allowed;transform:none;}
-  .sep{color:var(--border);font-size:1.2rem;}
-  .filter-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
-  .filter-label{font-size:.73rem;color:var(--muted);white-space:nowrap;}
-  .pill{
-    background:transparent;color:var(--muted);border:1px solid var(--border);
-    padding:4px 13px;border-radius:20px;font-size:.76rem;cursor:pointer;transition:all .15s;
-  }
+  .controls{background:var(--surface);border-bottom:1px solid var(--border);
+    padding:12px 36px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .btn-live{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;
+    padding:9px 18px;border-radius:9px;font-size:.84rem;font-weight:700;cursor:pointer;
+    transition:all .2s;display:flex;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(99,102,241,.3);}
+  .btn-live:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 18px rgba(99,102,241,.45);}
+  .btn-live:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+  .btn-monthly{background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.35);
+    padding:9px 18px;border-radius:9px;font-size:.84rem;font-weight:700;cursor:pointer;
+    transition:all .2s;display:flex;align-items:center;gap:6px;}
+  .btn-monthly:hover{background:rgba(16,185,129,.2);border-color:#10b981;transform:translateY(-1px);}
+  .sep{color:var(--border);font-size:1.1rem;}
+  .filter-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+  .filter-label{font-size:.72rem;color:var(--muted);white-space:nowrap;}
+  .pill{background:transparent;color:var(--muted);border:1px solid var(--border);
+    padding:4px 12px;border-radius:20px;font-size:.74rem;cursor:pointer;transition:all .15s;}
   .pill:hover{border-color:var(--accent);color:var(--text);}
   .pill.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-  /* ── Toolbar ── */
+  /* ── Toolbar / Status ── */
   .toolbar{padding:10px 36px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-
-  /* ── Status ── */
-  .status-bar{
-    padding:6px 36px;font-size:.73rem;color:var(--muted);
-    border-bottom:1px solid var(--border);background:var(--bg);
-  }
+  .status-bar{padding:6px 36px;font-size:.72rem;color:var(--muted);
+    border-bottom:1px solid var(--border);background:var(--bg);}
 
   /* ── Summary ── */
-  .summary{
-    padding:12px 36px;background:var(--surface);border-bottom:1px solid var(--border);
-    display:flex;gap:24px;flex-wrap:wrap;
-  }
+  .summary{padding:10px 36px;background:var(--surface);border-bottom:1px solid var(--border);
+    display:flex;gap:22px;flex-wrap:wrap;}
   .sum-item{display:flex;flex-direction:column;}
-  .sum-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
-  .sum-val{font-size:1.05rem;font-weight:700;color:var(--text);margin-top:2px;}
+  .sum-label{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+  .sum-val{font-size:1rem;font-weight:700;color:var(--text);margin-top:2px;}
 
-  /* ── Grid ── */
-  .stock-grid{
-    padding:22px 36px 40px;
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;
-  }
+  /* ── Grid / Cards ── */
+  .stock-grid{padding:22px 36px 40px;display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(315px,1fr));gap:15px;}
+  .stock-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:20px;transition:all .2s;position:relative;overflow:hidden;}
+  .stock-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    border-radius:14px 14px 0 0;background:linear-gradient(90deg,var(--theme-a),var(--theme-b));}
+  .stock-card:hover{border-color:rgba(99,102,241,.4);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.4);}
+  .stock-card.archived-card{opacity:.7;filter:saturate(.45);}
+  .stock-card.archived-card:hover{opacity:.88;filter:saturate(.65);}
 
-  /* ── Card ── */
-  .stock-card{
-    background:var(--card);border:1px solid var(--border);border-radius:14px;
-    padding:20px;transition:all .2s;position:relative;overflow:hidden;
-  }
-  .stock-card::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:3px;
-    border-radius:14px 14px 0 0;
-    background:linear-gradient(90deg,var(--theme-a),var(--theme-b));
-  }
-  .stock-card:hover{
-    border-color:rgba(99,102,241,.4);transform:translateY(-2px);
-    box-shadow:0 10px 30px rgba(0,0,0,.4);
-  }
-  .stock-card.archived-card{
-    opacity:.75;filter:saturate(.5);
-  }
-  .stock-card.archived-card:hover{opacity:.9;filter:saturate(.7);}
-
-  /* Score badge */
-  .score-badge{
-    position:absolute;top:16px;right:16px;width:42px;height:42px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;
-  }
+  .score-badge{position:absolute;top:15px;right:15px;width:42px;height:42px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;}
   .s-a{background:rgba(16,185,129,.15);color:#10b981;border:2px solid #10b981;}
   .s-b{background:rgba(245,158,11,.15);color:#f59e0b;border:2px solid #f59e0b;}
   .s-c{background:rgba(99,102,241,.15);color:#818cf8;border:2px solid #818cf8;}
 
-  /* NEW badge */
-  .new-badge{
-    position:absolute;top:14px;left:14px;
-    background:linear-gradient(135deg,#f59e0b,#ef4444);
-    color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.5px;
-    padding:2px 8px;border-radius:6px;text-transform:uppercase;
-    animation:pulse-new 2s infinite;box-shadow:0 2px 8px rgba(245,158,11,.4);
-  }
-  @keyframes pulse-new{
-    0%,100%{box-shadow:0 2px 8px rgba(245,158,11,.4);}
-    50%{box-shadow:0 2px 16px rgba(245,158,11,.8);}
-  }
+  .new-badge{position:absolute;top:13px;left:13px;
+    background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;
+    font-size:.6rem;font-weight:800;letter-spacing:.5px;padding:2px 8px;border-radius:6px;
+    text-transform:uppercase;animation:pulse-new 2s infinite;box-shadow:0 2px 8px rgba(245,158,11,.4);}
+  @keyframes pulse-new{0%,100%{box-shadow:0 2px 8px rgba(245,158,11,.4);}50%{box-shadow:0 2px 18px rgba(245,158,11,.75);}}
 
-  /* Archived reason */
-  .archived-reason{
-    margin-top:10px;padding:8px 10px;
-    background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);
-    border-radius:8px;font-size:.74rem;color:#fca5a5;line-height:1.4;
-  }
-  .archived-reason::before{content:'📦 เหตุผล: ';font-weight:700;color:#f87171;}
-
-  .archived-date{
-    font-size:.68rem;color:var(--muted);margin-top:5px;
-  }
-
-  .ticker{font-size:1.2rem;font-weight:800;color:#fff;letter-spacing:.5px;}
-  .co-name{font-size:.8rem;color:var(--muted);margin:2px 0 10px;}
-  .theme-tag{
-    display:inline-block;padding:3px 11px;border-radius:12px;
-    font-size:.7rem;font-weight:700;margin-bottom:12px;
-  }
-  .price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;flex-wrap:wrap;}
-  .price{font-size:1.4rem;font-weight:800;color:#fff;}
-  .price-pending{font-size:.88rem;color:var(--muted);font-style:italic;}
-  .chg{font-size:.8rem;font-weight:700;padding:2px 8px;border-radius:6px;}
+  .ticker{font-size:1.18rem;font-weight:800;color:#fff;letter-spacing:.5px;}
+  .co-name{font-size:.79rem;color:var(--muted);margin:2px 0 9px;}
+  .theme-tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.69rem;font-weight:700;margin-bottom:11px;}
+  .price-row{display:flex;align-items:baseline;gap:7px;margin-bottom:3px;flex-wrap:wrap;}
+  .price{font-size:1.38rem;font-weight:800;color:#fff;}
+  .price-pending{font-size:.86rem;color:var(--muted);font-style:italic;}
+  .chg{font-size:.78rem;font-weight:700;padding:2px 8px;border-radius:6px;}
   .chg-up{background:rgba(16,185,129,.12);color:#10b981;}
   .chg-dn{background:rgba(239,68,68,.12);color:#ef4444;}
-
-  .metrics{
-    display:grid;grid-template-columns:1fr 1fr;gap:8px;
-    margin-top:12px;padding-top:12px;border-top:1px solid var(--border);
-  }
-  .metric .ml{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
-  .metric .mv{font-size:.86rem;font-weight:700;color:var(--text);margin-top:1px;}
-
-  .bar-wrap{margin-top:11px;}
-  .bar-top{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:4px;}
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+    margin-top:11px;padding-top:11px;border-top:1px solid var(--border);}
+  .metric .ml{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+  .metric .mv{font-size:.84rem;font-weight:700;color:var(--text);margin-top:1px;}
+  .bar-wrap{margin-top:10px;}
+  .bar-top{display:flex;justify-content:space-between;font-size:.69rem;color:var(--muted);margin-bottom:3px;}
   .bar-track{height:4px;background:var(--border);border-radius:3px;overflow:hidden;}
   .bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#6366f1,#10b981);transition:width .6s ease;}
-
-  .stock-desc{font-size:.76rem;color:var(--subtle);margin-top:10px;line-height:1.55;}
-
-  .spinner{
-    display:inline-block;width:12px;height:12px;
-    border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
-    border-radius:50%;animation:spin .6s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
+  .stock-desc{font-size:.75rem;color:var(--subtle);margin-top:9px;line-height:1.55;}
+  .archived-reason{margin-top:9px;padding:7px 10px;background:rgba(239,68,68,.07);
+    border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:.72rem;color:#fca5a5;line-height:1.4;}
+  .archived-reason::before{content:'📦 เหตุผล: ';font-weight:700;color:#f87171;}
+  .archived-date{font-size:.66rem;color:var(--muted);margin-top:4px;}
   .empty{text-align:center;padding:60px;color:var(--muted);}
   .empty span{font-size:3rem;display:block;margin-bottom:12px;}
-
-  /* hide/show tabs */
+  .spinner{display:inline-block;width:12px;height:12px;
+    border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+    border-radius:50%;animation:spin .6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
   .tab-panel{display:none;}
   .tab-panel.active{display:block;}
+
+  /* ══════════════════════════════════════
+     MONTHLY UPDATE DRAWER
+  ══════════════════════════════════════ */
+  .drawer-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;
+    opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(3px);
+  }
+  .drawer-overlay.open{opacity:1;pointer-events:all;}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;width:460px;max-width:95vw;
+    background:#0d1526;border-left:1px solid var(--border);z-index:101;
+    transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:22px 24px 16px;border-bottom:1px solid var(--border);
+    background:linear-gradient(135deg,#0a1020,#0e1535);
+    display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  }
+  .drawer-title{font-size:1rem;font-weight:800;
+    background:linear-gradient(90deg,#a5b4fc,#34d399);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .drawer-close{background:rgba(255,255,255,.07);border:1px solid var(--border);
+    color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;
+    font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+  .drawer-close:hover{background:rgba(255,255,255,.12);color:var(--text);}
+  .drawer-body{overflow-y:auto;padding:20px 24px;flex:1;}
+
+  /* ── Monthly entry ── */
+  .month-entry{margin-bottom:28px;position:relative;padding-left:20px;}
+  .month-entry::before{content:'';position:absolute;left:6px;top:24px;bottom:-12px;
+    width:1px;background:var(--border);}
+  .month-entry:last-child::before{display:none;}
+  .month-dot{position:absolute;left:0;top:4px;width:13px;height:13px;border-radius:50%;
+    background:#6366f1;border:2px solid #0d1526;box-shadow:0 0 0 2px #6366f1;}
+  .month-dot.current{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.3);}
+  .month-label{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.5px;margin-bottom:10px;}
+  .month-label .current-tag{background:rgba(16,185,129,.15);color:#10b981;
+    font-size:.65rem;padding:1px 7px;border-radius:8px;margin-left:8px;font-weight:700;}
+
+  .change-group{margin-bottom:10px;}
+  .change-group-title{font-size:.7rem;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.5px;margin-bottom:6px;}
+
+  .stock-chip{display:inline-flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:8px;font-size:.78rem;font-weight:700;
+    margin:3px 4px 3px 0;}
+  .chip-added{background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.3);}
+  .chip-archived{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25);}
+
+  .month-note{margin-top:10px;padding:9px 12px;
+    background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);
+    border-radius:8px;font-size:.75rem;color:var(--subtle);line-height:1.55;}
+
+  .next-update-box{
+    margin-top:4px;padding:12px 16px;
+    background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);
+    border-radius:10px;font-size:.8rem;color:#fbbf24;line-height:1.6;
+  }
+  .next-update-box strong{color:#fff;}
+  .progress-bar-wrap{margin-top:8px;}
+  .progress-label{display:flex;justify-content:space-between;font-size:.68rem;
+    color:var(--muted);margin-bottom:4px;}
+  .progress-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#f59e0b,#10b981);}
 </style>
 </head>
 <body>
@@ -209,7 +203,7 @@
   <h1>🚀 Long Tail Stock Finder</h1>
   <div class="header-meta">
     <p>ระบบคัดกรองหุ้น <strong style="color:#a5b4fc">Long Tail</strong> ที่มีศักยภาพเติบโต <strong style="color:#c084fc">หลายเท่าตัว</strong></p>
-    <span class="update-badge">🗓 อัพเดท เมษายน 2026</span>
+    <span class="update-badge" id="headerUpdateBadge">🗓 อัพเดท เมษายน 2026</span>
   </div>
   <div class="disclaimer">
     ⚠️ <strong>คำเตือน:</strong> ข้อมูลนี้ไม่ใช่คำแนะนำการลงทุน • หุ้น Long Tail มีความเสี่ยงสูงมาก อาจเสียหายทั้งหมด • ศึกษาข้อมูลเพิ่มเติมก่อนตัดสินใจเสมอ
@@ -219,21 +213,23 @@
 <!-- ══ TABS ══ -->
 <div class="tab-bar">
   <button class="tab-btn active" id="tab-active" onclick="setTab('active')">
-    🔥 Active
-    <span class="tab-count" id="cnt-active">—</span>
+    🔥 Active <span class="tab-count" id="cnt-active">—</span>
     <span class="tab-new-count" id="cnt-new" style="display:none"></span>
   </button>
   <button class="tab-btn" id="tab-archived" onclick="setTab('archived')">
-    📦 Archived
-    <span class="tab-count" id="cnt-archived">—</span>
+    📦 Archived <span class="tab-count" id="cnt-archived">—</span>
   </button>
 </div>
 
 <!-- ══ CONTROLS ══ -->
 <div class="controls">
-  <button class="btn-update" id="updateBtn" onclick="updateAll()">
+  <button class="btn-live" id="updateBtn" onclick="updateLive()">
     <span id="btnIcon">⚡</span>
     <span id="btnText">อัพเดทราคา Live</span>
+  </button>
+  <button class="btn-monthly" onclick="openDrawer()">
+    🗓 Monthly Update
+    <span id="nextUpdateLabel" style="font-size:.68rem;opacity:.7;margin-left:2px;"></span>
   </button>
   <span class="sep">│</span>
   <div class="filter-row">
@@ -257,108 +253,128 @@
   <button class="pill" onclick="setSort('change',this)">🔥 เปลี่ยนแปลงวันนี้</button>
   <button class="pill" onclick="setSort('mcap',this)">💰 Market Cap</button>
 </div>
-
 <div class="status-bar" id="statusBar">⬜ กด "อัพเดทราคา Live" เพื่อดูราคาล่าสุด</div>
-
 <div class="summary" id="summaryBar" style="display:none">
   <div class="sum-item"><span class="sum-label">หุ้นที่แสดง</span><span class="sum-val" id="sumTotal">—</span></div>
   <div class="sum-item"><span class="sum-label">ขึ้นวันนี้</span><span class="sum-val" style="color:#10b981" id="sumUp">—</span></div>
   <div class="sum-item"><span class="sum-label">ลงวันนี้</span><span class="sum-val" style="color:#ef4444" id="sumDn">—</span></div>
   <div class="sum-item"><span class="sum-label">Score เฉลี่ย</span><span class="sum-val" style="color:#818cf8" id="sumAvgScore">—</span></div>
-  <div class="sum-item"><span class="sum-label">อัพเดทล่าสุด</span><span class="sum-val" style="font-size:.78rem" id="sumTime">—</span></div>
+  <div class="sum-item"><span class="sum-label">ราคาอัพเดท</span><span class="sum-val" style="font-size:.76rem" id="sumTime">—</span></div>
 </div>
 
-<!-- ══ ACTIVE TAB ══ -->
+<!-- ══ PANELS ══ -->
 <div class="tab-panel active" id="panel-active">
   <div class="stock-grid" id="gridActive"></div>
 </div>
-
-<!-- ══ ARCHIVED TAB ══ -->
 <div class="tab-panel" id="panel-archived">
   <div class="stock-grid" id="gridArchived"></div>
 </div>
 
+<!-- ══ MONTHLY UPDATE DRAWER ══ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title">🗓 Monthly Update Log</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:3px;">ประวัติการคัดกรองหุ้นรายเดือน</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</div>
+
 <script>
-/* ═══════════════════════════════════════════════
-   ACTIVE STOCKS  —  อัพเดท เมษายน 2026
-   isNew = true  → ใส่เพิ่มเดือนนี้
-═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   STOCK DATABASE
+═══════════════════════════════════════ */
 const ACTIVE = [
-  /* 🛸 Space */
-  { t:'ASTS',  n:'AST SpaceMobile',          sec:'space',   theme:'🛸 Space',       ta:'#8b5cf6',tb:'#c084fc', score:95,mult:'5–20x', risk:'Very High',upside:85, isNew:false,
-    why:'สร้าง satellite ต่อตรงมือถือทุกเครื่องในโลก 5 พันล้านคน ไม่ต้อง SIM พิเศษ เพิ่งเปิดตัวบริการเชิงพาณิชย์' },
-  { t:'RKLB',  n:'Rocket Lab USA',            sec:'space',   theme:'🛸 Space',       ta:'#7c3aed',tb:'#a78bfa', score:88,mult:'5–15x', risk:'High',     upside:70, isNew:false,
-    why:'ส่งดาวเทียมเล็ก + พัฒนา Neutron Rocket medium-lift backlog เพิ่มขึ้นต่อเนื่อง' },
-  { t:'LUNR',  n:'Intuitive Machines',        sec:'space',   theme:'🛸 Lunar',       ta:'#6d28d9',tb:'#8b5cf6', score:78,mult:'3–12x', risk:'Very High',upside:70, isNew:false,
-    why:'ผู้รับเหมา NASA ภารกิจดวงจันทร์ lunar economy เริ่มต้น contract ใหม่กับ SpaceX' },
-
-  /* 🤖 AI */
-  { t:'SOUN',  n:'SoundHound AI',             sec:'ai',      theme:'🤖 AI Voice',    ta:'#0284c7',tb:'#38bdf8', score:83,mult:'3–12x', risk:'High',     upside:65, isNew:false,
-    why:'Voice AI ยานยนต์ + ร้านอาหาร อยู่ใน Nvidia ecosystem รถ Honda/Hyundai ใช้อยู่' },
-  { t:'RXRX',  n:'Recursion Pharmaceuticals', sec:'ai',      theme:'🤖 AI+Biotech',  ta:'#0e7490',tb:'#22d3ee', score:86,mult:'5–15x', risk:'High',     upside:80, isNew:false,
-    why:'AI ค้นพบยาเร็วกว่าเดิม 100x partnership Nvidia pipeline ยา 40+ ตัว' },
-  { t:'SERV',  n:'Serve Robotics',            sec:'ai',      theme:'🤖 AI Robot',    ta:'#0369a1',tb:'#7dd3fc', score:80,mult:'5–15x', risk:'Very High',upside:78, isNew:true,
-    why:'หุ่นยนต์ส่งอาหารอัตโนมัติใน LA Nvidia + Uber Eats ลงทุน ขยาย fleet 2,000 คัน ปี 2026' },
-
-  /* ⚛️ Quantum */
-  { t:'IONQ',  n:'IonQ',                      sec:'quantum', theme:'⚛️ Quantum',     ta:'#7c3aed',tb:'#d946ef', score:91,mult:'10–30x',risk:'Very High',upside:90, isNew:false,
-    why:'Quantum computer รายได้จริง AWS / Azure / GCP แม่นยำสูงสุด contract ทหารใหม่' },
-  { t:'RGTI',  n:'Rigetti Computing',         sec:'quantum', theme:'⚛️ Quantum',     ta:'#6b21a8',tb:'#c026d3', score:75,mult:'5–20x', risk:'Very High',upside:88, isNew:false,
-    why:'Full-stack quantum cloud ราคาถูก contract US Air Force เพิ่มขึ้น' },
-  { t:'QUBT',  n:'Quantum Computing Inc.',    sec:'quantum', theme:'⚛️ Quantum',     ta:'#701a75',tb:'#a21caf', score:68,mult:'5–15x', risk:'Very High',upside:82, isNew:false,
-    why:'Photonic quantum optimization ราคาต่ำ ใช้บน hardware ปัจจุบันได้เลย' },
-
-  /* 🧬 Biotech */
-  { t:'VERV',  n:'Verve Therapeutics',        sec:'biotech', theme:'🧬 Gene Edit',   ta:'#047857',tb:'#10b981', score:80,mult:'5–20x', risk:'Very High',upside:75, isNew:false,
-    why:'Gene editing ลด LDL ถาวรครั้งเดียว รักษาโรคหัวใจ phase 1 data น่าสนใจมาก' },
-  { t:'BEAM',  n:'Beam Therapeutics',         sec:'biotech', theme:'🧬 Base Edit',   ta:'#065f46',tb:'#34d399', score:78,mult:'4–12x', risk:'Very High',upside:68, isNew:false,
-    why:'Base editing แม่นยำกว่า CRISPR 10x ผลทดลอง sickle cell น่าประทับใจ' },
-
-  /* ⚡ Clean Energy */
-  { t:'OKLO',  n:'Oklo Inc.',                 sec:'energy',  theme:'⚡ Nuclear',     ta:'#b45309',tb:'#fbbf24', score:87,mult:'5–20x', risk:'Very High',upside:82, isNew:true,
-    why:'Microreactor นิวเคลียร์ขนาดเล็ก Sam Altman อยู่ใน board contract กับ data centers AI ล่าสุด' },
-  { t:'SHLS',  n:'Shoals Technologies',       sec:'energy',  theme:'⚡ Solar',       ta:'#78350f',tb:'#fbbf24', score:76,mult:'3–8x',  risk:'Mid',      upside:58, isNew:false,
-    why:'Electrical BOS utility-scale solar backlog ยาว gross margin สูง IRA tailwind' },
-
-  /* 🛩 eVTOL */
-  { t:'JOBY',  n:'Joby Aviation',             sec:'evtol',   theme:'🛩 eVTOL',       ta:'#1d4ed8',tb:'#60a5fa', score:84,mult:'5–20x', risk:'Very High',upside:80, isNew:true,
-    why:'Air taxi ไฟฟ้า Toyota ลงทุน 894M$ FAA certification ใกล้แล้ว เปิดบริการ Dubai 2026' },
-  { t:'ACHR',  n:'Archer Aviation',           sec:'evtol',   theme:'🛩 eVTOL',       ta:'#1e40af',tb:'#93c5fd', score:79,mult:'4–15x', risk:'Very High',upside:75, isNew:true,
-    why:'eVTOL air taxi United Airlines deal + Stellantis ผลิต FAA type certificate รอแค่ approval' },
-
-  /* 💳 Fintech */
-  { t:'UPST',  n:'Upstart Holdings',          sec:'fintech', theme:'💳 AI Lending',  ta:'#9a3412',tb:'#fb923c', score:79,mult:'3–10x', risk:'High',     upside:65, isNew:false,
-    why:'AI lending 1,600+ variables แทน credit score อัตราดอกเบี้ยลดช่วย loan volume ฟื้น' },
-  { t:'AFRM',  n:'Affirm Holdings',           sec:'fintech', theme:'💳 BNPL',        ta:'#7f1d1d',tb:'#f87171', score:77,mult:'3–8x',  risk:'High',     upside:58, isNew:false,
-    why:'BNPL ชั้นนำ Amazon + Shopify ขยาย debit card 0% APR deal ใหม่ GMV เติบโต 35% YoY' },
-  { t:'SOFI',  n:'SoFi Technologies',         sec:'fintech', theme:'💳 Neobank',     ta:'#450a0a',tb:'#fca5a5', score:76,mult:'3–8x',  risk:'Mid',      upside:55, isNew:false,
-    why:'Digital bank มี banking license cross-sell lending + investing + checking ในแอปเดียว' },
+  {t:'ASTS', n:'AST SpaceMobile',          sec:'space',   theme:'🛸 Space',       ta:'#8b5cf6',tb:'#c084fc',score:95,mult:'5–20x', risk:'Very High',upside:85,addedDate:'2025-10-01',
+   why:'สร้าง satellite ต่อตรงมือถือทุกเครื่องในโลก 5 พันล้านคน ไม่ต้อง SIM พิเศษ เปิดบริการเชิงพาณิชย์แล้ว'},
+  {t:'RKLB', n:'Rocket Lab USA',            sec:'space',   theme:'🛸 Space',       ta:'#7c3aed',tb:'#a78bfa',score:88,mult:'5–15x', risk:'High',     upside:70,addedDate:'2025-10-01',
+   why:'ส่งดาวเทียมเล็ก + พัฒนา Neutron Rocket medium-lift backlog เพิ่มขึ้นต่อเนื่อง'},
+  {t:'LUNR', n:'Intuitive Machines',        sec:'space',   theme:'🛸 Lunar',       ta:'#6d28d9',tb:'#8b5cf6',score:78,mult:'3–12x', risk:'Very High',upside:70,addedDate:'2025-10-01',
+   why:'ผู้รับเหมา NASA ภารกิจดวงจันทร์ lunar economy เริ่มต้น มี contract ใหม่ต่อเนื่อง'},
+  {t:'SOUN', n:'SoundHound AI',             sec:'ai',      theme:'🤖 AI Voice',    ta:'#0284c7',tb:'#38bdf8',score:83,mult:'3–12x', risk:'High',     upside:65,addedDate:'2025-10-01',
+   why:'Voice AI ยานยนต์ + ร้านอาหาร อยู่ใน Nvidia ecosystem รถ Honda/Hyundai ใช้อยู่'},
+  {t:'RXRX', n:'Recursion Pharmaceuticals', sec:'ai',      theme:'🤖 AI+Biotech',  ta:'#0e7490',tb:'#22d3ee',score:86,mult:'5–15x', risk:'High',     upside:80,addedDate:'2025-10-01',
+   why:'AI ค้นพบยาเร็วกว่าเดิม 100x partnership Nvidia pipeline ยา 40+ ตัว'},
+  {t:'SERV', n:'Serve Robotics',            sec:'ai',      theme:'🤖 AI Robot',    ta:'#0369a1',tb:'#7dd3fc',score:80,mult:'5–15x', risk:'Very High',upside:78,addedDate:'2026-04-01',
+   why:'หุ่นยนต์ส่งอาหารอัตโนมัติใน LA Nvidia + Uber Eats ลงทุน ขยาย fleet 2,000 คัน ปี 2026'},
+  {t:'IONQ', n:'IonQ',                      sec:'quantum', theme:'⚛️ Quantum',     ta:'#7c3aed',tb:'#d946ef',score:91,mult:'10–30x',risk:'Very High',upside:90,addedDate:'2025-10-01',
+   why:'Quantum computer รายได้จริง AWS / Azure / GCP แม่นยำสูงสุด contract ทหารใหม่'},
+  {t:'RGTI', n:'Rigetti Computing',         sec:'quantum', theme:'⚛️ Quantum',     ta:'#6b21a8',tb:'#c026d3',score:75,mult:'5–20x', risk:'Very High',upside:88,addedDate:'2025-10-01',
+   why:'Full-stack quantum cloud ราคาถูก contract US Air Force เพิ่มขึ้น'},
+  {t:'QUBT', n:'Quantum Computing Inc.',    sec:'quantum', theme:'⚛️ Quantum',     ta:'#701a75',tb:'#a21caf',score:68,mult:'5–15x', risk:'Very High',upside:82,addedDate:'2025-10-01',
+   why:'Photonic quantum optimization ราคาต่ำ ใช้บน hardware ปัจจุบันได้เลย'},
+  {t:'VERV', n:'Verve Therapeutics',        sec:'biotech', theme:'🧬 Gene Edit',   ta:'#047857',tb:'#10b981',score:80,mult:'5–20x', risk:'Very High',upside:75,addedDate:'2025-10-01',
+   why:'Gene editing ลด LDL ถาวรครั้งเดียว รักษาโรคหัวใจ phase 1 data น่าสนใจมาก'},
+  {t:'BEAM', n:'Beam Therapeutics',         sec:'biotech', theme:'🧬 Base Edit',   ta:'#065f46',tb:'#34d399',score:78,mult:'4–12x', risk:'Very High',upside:68,addedDate:'2025-10-01',
+   why:'Base editing แม่นยำกว่า CRISPR 10x ผลทดลอง sickle cell น่าประทับใจ'},
+  {t:'OKLO', n:'Oklo Inc.',                 sec:'energy',  theme:'⚡ Nuclear',     ta:'#b45309',tb:'#fbbf24',score:87,mult:'5–20x', risk:'Very High',upside:82,addedDate:'2026-04-01',
+   why:'Microreactor นิวเคลียร์ขนาดเล็ก Sam Altman อยู่ใน board contract data center AI ล่าสุด'},
+  {t:'SHLS', n:'Shoals Technologies',       sec:'energy',  theme:'⚡ Solar',       ta:'#78350f',tb:'#fbbf24',score:76,mult:'3–8x',  risk:'Mid',      upside:58,addedDate:'2025-10-01',
+   why:'Electrical BOS utility-scale solar backlog ยาว gross margin สูง IRA tailwind'},
+  {t:'JOBY', n:'Joby Aviation',             sec:'evtol',   theme:'🛩 eVTOL',       ta:'#1d4ed8',tb:'#60a5fa',score:84,mult:'5–20x', risk:'Very High',upside:80,addedDate:'2026-04-01',
+   why:'Air taxi ไฟฟ้า Toyota ลงทุน 894M$ FAA certification ใกล้แล้ว เปิดบริการ Dubai 2026'},
+  {t:'ACHR', n:'Archer Aviation',           sec:'evtol',   theme:'🛩 eVTOL',       ta:'#1e40af',tb:'#93c5fd',score:79,mult:'4–15x', risk:'Very High',upside:75,addedDate:'2026-04-01',
+   why:'eVTOL air taxi United Airlines deal + Stellantis ผลิต FAA type certificate รอ approval'},
+  {t:'UPST', n:'Upstart Holdings',          sec:'fintech', theme:'💳 AI Lending',  ta:'#9a3412',tb:'#fb923c',score:79,mult:'3–10x', risk:'High',     upside:65,addedDate:'2025-10-01',
+   why:'AI lending 1,600+ variables แทน credit score อัตราดอกเบี้ยลดช่วย loan volume ฟื้น'},
+  {t:'AFRM', n:'Affirm Holdings',           sec:'fintech', theme:'💳 BNPL',        ta:'#7f1d1d',tb:'#f87171',score:77,mult:'3–8x',  risk:'High',     upside:58,addedDate:'2025-10-01',
+   why:'BNPL ชั้นนำ Amazon + Shopify ขยาย debit card 0% APR deal ใหม่ GMV เติบโต 35% YoY'},
+  {t:'SOFI', n:'SoFi Technologies',         sec:'fintech', theme:'💳 Neobank',     ta:'#450a0a',tb:'#fca5a5',score:76,mult:'3–8x',  risk:'Mid',      upside:55,addedDate:'2025-10-01',
+   why:'Digital bank มี banking license cross-sell lending + investing + checking ในแอปเดียว'},
 ];
 
-/* ═══════════════════════════════════════════════
-   ARCHIVED STOCKS  —  นำออกจาก watchlist
-═══════════════════════════════════════════════ */
 const ARCHIVED = [
-  { t:'GFAI', n:'Guardforce AI',       sec:'ai',     theme:'🤖 AI Robot',    ta:'#374151',tb:'#6b7280',
-    score:40, archivedDate:'มีนาคม 2026',
-    archivedReason:'Market cap เล็กเกิน liquidity ต่ำ revenue หดตัว 3 ไตรมาสติด ยากจะ scale' },
-  { t:'BBAI', n:'BigBear.ai',          sec:'ai',     theme:'🤖 AI Defense',  ta:'#374151',tb:'#6b7280',
-    score:35, archivedDate:'มีนาคม 2026',
-    archivedReason:'Contract ไม่ต่ออายุหลายรายการ ขาดทุนเพิ่มขึ้น competition จาก Palantir สูง' },
-  { t:'FLUX', n:'Flux Power Holdings', sec:'energy', theme:'⚡ Battery',     ta:'#374151',tb:'#6b7280',
-    score:38, archivedDate:'กุมภาพันธ์ 2026',
-    archivedReason:'Growth ชะลอตัว competition จาก Chinese battery สูง margin กดดัน' },
-  { t:'ARRY', n:'Array Technologies',  sec:'energy', theme:'⚡ Solar Track',  ta:'#374151',tb:'#6b7280',
-    score:42, archivedDate:'กุมภาพันธ์ 2026',
-    archivedReason:'Mature company แล้ว margin compression ASP ลดลง ไม่ใช่ high-growth story อีกต่อไป' },
-  { t:'PACB', n:'Pacific Biosciences', sec:'biotech',theme:'🧬 Genomics',    ta:'#374151',tb:'#6b7280',
-    score:33, archivedDate:'มกราคม 2026',
-    archivedReason:'Cash burn สูงมาก revenue growth หยุด Illumina ฟื้นตัวแข่งกลับ การเงินตึงตัว' },
+  {t:'GFAI',n:'Guardforce AI',      sec:'ai',     theme:'🤖 AI Robot',   ta:'#374151',tb:'#6b7280',score:40,
+   archivedDate:'มีนาคม 2026', archivedReason:'Market cap เล็กเกิน liquidity ต่ำ revenue หดตัว 3 ไตรมาสติด ยากจะ scale'},
+  {t:'BBAI',n:'BigBear.ai',         sec:'ai',     theme:'🤖 AI Defense', ta:'#374151',tb:'#6b7280',score:35,
+   archivedDate:'มีนาคม 2026', archivedReason:'Contract ไม่ต่ออายุหลายรายการ ขาดทุนเพิ่ม competition จาก Palantir สูง'},
+  {t:'FLUX',n:'Flux Power Holdings',sec:'energy', theme:'⚡ Battery',    ta:'#374151',tb:'#6b7280',score:38,
+   archivedDate:'กุมภาพันธ์ 2026', archivedReason:'Growth ชะลอตัว competition จาก Chinese battery สูง margin กดดัน'},
+  {t:'ARRY',n:'Array Technologies', sec:'energy', theme:'⚡ Solar Track', ta:'#374151',tb:'#6b7280',score:42,
+   archivedDate:'กุมภาพันธ์ 2026', archivedReason:'Mature company แล้ว margin compression ASP ลดลง ไม่ใช่ high-growth story อีกต่อไป'},
+  {t:'PACB',n:'Pacific Biosciences',sec:'biotech',theme:'🧬 Genomics',   ta:'#374151',tb:'#6b7280',score:33,
+   archivedDate:'มกราคม 2026', archivedReason:'Cash burn สูงมาก revenue growth หยุด Illumina ฟื้นตัวแข่งกลับ การเงินตึงตัว'},
+];
+
+/* ══ Monthly changelog ══ */
+const MONTHLY_LOG = [
+  {
+    month:'เมษายน 2026', date:'2026-04-01', isCurrent:true,
+    added:['SERV','OKLO','JOBY','ACHR'],
+    archived:['GFAI','BBAI'],
+    note:'เพิ่ม sector ใหม่ eVTOL (Joby, Archer) + nuclear microreactor (Oklo) ที่ได้ Sam Altman backing และ delivery robots (Serve) ใน Nvidia ecosystem นำออก GFAI และ BBAI ที่ fundamentals อ่อนแอ'
+  },
+  {
+    month:'กุมภาพันธ์ 2026', date:'2026-02-01', isCurrent:false,
+    added:[],
+    archived:['FLUX','ARRY'],
+    note:'นำออก FLUX และ ARRY เนื่องจาก growth story จางลง margin กดดันจาก competition และ policy changes ไม่มีหุ้นใหม่รอบนี้'
+  },
+  {
+    month:'มกราคม 2026', date:'2026-01-01', isCurrent:false,
+    added:[],
+    archived:['PACB'],
+    note:'นำออก PACB หลัง Illumina ฟื้นตัวแข่งกลับเต็มตัว cash runway เหลือน้อย revenue stagnation'
+  },
+  {
+    month:'ตุลาคม 2025', date:'2025-10-01', isCurrent:false,
+    added:['ASTS','RKLB','LUNR','SOUN','RXRX','IONQ','RGTI','QUBT','VERV','BEAM','SHLS','UPST','AFRM','SOFI'],
+    archived:[],
+    note:'เปิดตัว Long Tail Stock Finder คัดกรองหุ้น 14 ตัวแรกครอบคลุม 6 sectors: Space, AI, Quantum, Biotech, Solar Energy, Fintech'
+  },
 ];
 
 /* ════════════════════════ */
 let liveData={}, activeFilter='all', activeSort='score', currentTab='active';
 
+function isNew(addedDate){
+  const added = new Date(addedDate);
+  const now   = new Date();
+  return (now - added) < 45*24*60*60*1000; // 45 วัน
+}
 function scoreClass(s){return s>=85?'s-a':s>=75?'s-b':'s-c';}
 function fmtCap(v){
   if(!v)return 'N/A';
@@ -367,37 +383,47 @@ function fmtCap(v){
   return '$'+(v/1e6).toFixed(0)+'M';
 }
 
+/* ── next update countdown ── */
+function getNextUpdateInfo(){
+  const now   = new Date();
+  const nextM = new Date(now.getFullYear(), now.getMonth()+1, 1);
+  const days  = Math.ceil((nextM - now)/(1000*60*60*24));
+  const daysInMonth = new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  const passed = daysInMonth - days;
+  const pct    = Math.round((passed/daysInMonth)*100);
+  return {days, pct};
+}
+
 function updateCounts(){
-  const newCount = ACTIVE.filter(s=>s.isNew).length;
+  const newCount = ACTIVE.filter(s=>isNew(s.addedDate)).length;
   document.getElementById('cnt-active').textContent   = ACTIVE.length;
   document.getElementById('cnt-archived').textContent = ARCHIVED.length;
   const nb = document.getElementById('cnt-new');
-  if(newCount>0){ nb.textContent=`+${newCount} NEW`; nb.style.display='inline'; }
+  if(newCount>0){nb.textContent=`+${newCount} NEW`;nb.style.display='inline';}
+  const {days} = getNextUpdateInfo();
+  document.getElementById('nextUpdateLabel').textContent = `(อีก ${days} วัน)`;
 }
 
+/* ── Render Active ── */
 function renderActive(){
-  const grid = document.getElementById('gridActive');
-  let list = ACTIVE.filter(s=>activeFilter==='all'||s.sec===activeFilter);
+  const grid=document.getElementById('gridActive');
+  let list=ACTIVE.filter(s=>activeFilter==='all'||s.sec===activeFilter);
   if(activeSort==='score')  list.sort((a,b)=>b.score-a.score);
   if(activeSort==='upside') list.sort((a,b)=>b.upside-a.upside);
   if(activeSort==='change') list.sort((a,b)=>(liveData[b.t]?.regularMarketChangePercent||0)-(liveData[a.t]?.regularMarketChangePercent||0));
   if(activeSort==='mcap')   list.sort((a,b)=>(liveData[b.t]?.marketCap||0)-(liveData[a.t]?.marketCap||0));
-
   if(!list.length){grid.innerHTML='<div class="empty"><span>🔭</span>ไม่มีหุ้นในหมวดนี้</div>';return;}
-
   grid.innerHTML=list.map(s=>{
     const d=liveData[s.t]||{};
-    const px=d.regularMarketPrice, chg=d.regularMarketChange, pct=d.regularMarketChangePercent;
+    const px=d.regularMarketPrice,chg=d.regularMarketChange,pct=d.regularMarketChangePercent;
+    const newStock=isNew(s.addedDate);
     const priceHtml=px?`<span class="price">$${px.toFixed(2)}</span>`:`<span class="price-pending">— กดอัพเดท —</span>`;
     let chgHtml='';
     if(chg!=null){const c=chg>=0?'chg-up':'chg-dn',sg=chg>=0?'+':'';chgHtml=`<span class="chg ${c}">${sg}${chg.toFixed(2)} (${sg}${pct.toFixed(2)}%)</span>`;}
-    return `
-    <div class="stock-card" style="--theme-a:${s.ta};--theme-b:${s.tb}">
-      ${s.isNew?'<div class="new-badge">✨ NEW</div>':''}
-      <div class="score-badge ${scoreClass(s.score)}" style="${s.isNew?'top:14px;right:14px':''}">
-        ${s.score}
-      </div>
-      <div class="ticker" style="${s.isNew?'margin-top:28px':''}">${s.t}</div>
+    return `<div class="stock-card" style="--theme-a:${s.ta};--theme-b:${s.tb}">
+      ${newStock?'<div class="new-badge">✨ NEW</div>':''}
+      <div class="score-badge ${scoreClass(s.score)}">${s.score}</div>
+      <div class="ticker" style="${newStock?'margin-top:26px':''}">${s.t}</div>
       <div class="co-name">${s.n}</div>
       <span class="theme-tag" style="background:${s.ta}22;color:${s.tb};border:1px solid ${s.ta}55">${s.theme}</span>
       <div class="price-row">${priceHtml}${chgHtml}</div>
@@ -414,8 +440,6 @@ function renderActive(){
       <div class="stock-desc">${s.why}</div>
     </div>`;
   }).join('');
-
-  // summary
   if(Object.keys(liveData).length>0){
     const ups=list.filter(s=>(liveData[s.t]?.regularMarketChangePercent||0)>0).length;
     const dns=list.filter(s=>(liveData[s.t]?.regularMarketChangePercent||0)<0).length;
@@ -427,40 +451,83 @@ function renderActive(){
   }
 }
 
+/* ── Render Archived ── */
 function renderArchived(){
   const grid=document.getElementById('gridArchived');
   let list=ARCHIVED.filter(s=>activeFilter==='all'||s.sec===activeFilter);
-  list.sort((a,b)=>b.score-a.score);
-
-  if(!list.length){grid.innerHTML='<div class="empty"><span>📦</span>ไม่มีหุ้นใน Archived หมวดนี้</div>';return;}
-
-  grid.innerHTML=list.map(s=>`
-    <div class="stock-card archived-card" style="--theme-a:${s.ta};--theme-b:${s.tb}">
-      <div class="score-badge ${scoreClass(s.score)}">${s.score}</div>
-      <div class="ticker">${s.t}</div>
-      <div class="co-name">${s.n}</div>
-      <span class="theme-tag" style="background:${s.ta}22;color:${s.tb};border:1px solid ${s.ta}55">${s.theme}</span>
-      <div class="archived-reason">${s.archivedReason}</div>
-      <div class="archived-date">นำออกเมื่อ: ${s.archivedDate}</div>
-    </div>`
-  ).join('');
+  if(!list.length){grid.innerHTML='<div class="empty"><span>📦</span>ไม่มีหุ้น Archived ในหมวดนี้</div>';return;}
+  grid.innerHTML=list.map(s=>`<div class="stock-card archived-card" style="--theme-a:${s.ta};--theme-b:${s.tb}">
+    <div class="score-badge ${scoreClass(s.score)}">${s.score}</div>
+    <div class="ticker">${s.t}</div><div class="co-name">${s.n}</div>
+    <span class="theme-tag" style="background:${s.ta}22;color:${s.tb};border:1px solid ${s.ta}55">${s.theme}</span>
+    <div class="archived-reason">${s.archivedReason}</div>
+    <div class="archived-date">นำออกเมื่อ: ${s.archivedDate}</div>
+  </div>`).join('');
 }
 
 function render(){
-  if(currentTab==='active') renderActive();
-  else renderArchived();
+  if(currentTab==='active') renderActive(); else renderArchived();
 }
 
-/* ── Fetch ── */
-async function updateAll(){
+/* ── Monthly Drawer ── */
+function buildDrawer(){
+  const {days,pct}=getNextUpdateInfo();
+  const stockMap={};
+  [...ACTIVE,...ARCHIVED].forEach(s=>{stockMap[s.t]=s;});
+
+  let html=`<div class="next-update-box">
+    <strong>🗓 อัพเดทรายเดือนถัดไป</strong><br>
+    อีก <strong>${days} วัน</strong> — ต้นเดือนหน้า จะรีวิวหุ้นทั้งหมด ย้าย archive ตัวที่แนวโน้มแย่ลง และเพิ่มตัวใหม่ที่น่าสนใจ
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span>เดือนที่ผ่านมาแล้ว</span><span>${pct}%</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+  </div>
+  <div style="height:20px"></div>`;
+
+  MONTHLY_LOG.forEach((entry,i)=>{
+    const addedChips = entry.added.map(t=>{
+      const s=stockMap[t];
+      return `<span class="stock-chip chip-added">✨ ${t}${s?` · ${s.theme}`:''}`;
+    }).join('');
+    const archChips = entry.archived.map(t=>{
+      const s=stockMap[t];
+      return `<span class="stock-chip chip-archived">📦 ${t}${s?` · ${s.theme}`:''}`;
+    }).join('');
+
+    html+=`<div class="month-entry">
+      <div class="month-dot ${entry.isCurrent?'current':''}"></div>
+      <div class="month-label">${entry.month} ${entry.isCurrent?'<span class="current-tag">ล่าสุด</span>':''}</div>
+      ${entry.added.length?`<div class="change-group"><div class="change-group-title">➕ เพิ่มเข้า Watchlist</div>${addedChips}</div>`:''}
+      ${entry.archived.length?`<div class="change-group"><div class="change-group-title">📦 ย้ายออก Archive</div>${archChips}</div>`:''}
+      ${entry.added.length===0&&entry.archived.length===0?`<div style="font-size:.76rem;color:var(--muted)">ไม่มีการเปลี่ยนแปลง</div>`:''}
+      <div class="month-note">💬 ${entry.note}</div>
+    </div>`;
+  });
+
+  document.getElementById('drawerBody').innerHTML=html;
+}
+
+function openDrawer(){
+  buildDrawer();
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ── Live Price Fetch ── */
+async function updateLive(){
   const btn=document.getElementById('updateBtn');
   const bar=document.getElementById('statusBar');
   btn.disabled=true;
   document.getElementById('btnIcon').innerHTML='<span class="spinner"></span>';
   document.getElementById('btnText').textContent='กำลังโหลด...';
-  bar.textContent='⏳ กำลังดึงข้อมูล...';bar.style.color='var(--muted)';
-
-  // ดึงเฉพาะ active stocks
+  bar.textContent='⏳ กำลังดึงราคาจาก Yahoo Finance...'; bar.style.color='var(--muted)';
   const syms=ACTIVE.map(s=>s.t).join(',');
   try{
     const r=await fetch(`/api/quotes?symbols=${encodeURIComponent(syms)}`,{signal:AbortSignal.timeout(15000)});
@@ -488,19 +555,18 @@ function setTab(tab){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
   document.getElementById(`panel-${tab}`).classList.add('active');
-  // summary bar แสดงเฉพาะ active tab
-  document.getElementById('summaryBar').style.display = (tab==='active'&&Object.keys(liveData).length>0)?'flex':'none';
+  document.getElementById('summaryBar').style.display=(tab==='active'&&Object.keys(liveData).length>0)?'flex':'none';
   render();
 }
 function setFilter(sec,el){
   activeFilter=sec;
   document.querySelectorAll('.controls .pill').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');render();
+  el.classList.add('active'); render();
 }
 function setSort(s,el){
   activeSort=s;
   document.querySelectorAll('.toolbar .pill').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');render();
+  el.classList.add('active'); render();
 }
 
 /* ── Init ── */
